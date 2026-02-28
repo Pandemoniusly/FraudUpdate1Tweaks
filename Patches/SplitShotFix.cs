@@ -24,7 +24,7 @@ namespace FraudTweaks.Patches
         private static void RevolverPierce(RevolverBeam __instance,ref PhysicsCastResult rayHit, ref bool ___splitcoinable, ref LayerMask ___enemyLayerMask)
         {
             bool setSplit = false;
-            if (__instance.tag == "ShouldBeSplittable")
+            if (!__instance.strongAlt)
             {
                 ___splitcoinable = true;
                 setSplit = true;
@@ -41,7 +41,6 @@ namespace FraudTweaks.Patches
                 bool flag2 = PortalPhysicsV2.Raycast(position, forward, num2, ___enemyLayerMask, out hitInfo, out portalTraversals, out endPoint);
                 if (flag2 & hitInfo.transform.gameObject.TryGetComponent<Coin>(out var coin))
                 {
-                    __instance.tag = "ShouldBeSplittable";
                     Vision coinVision = AccessTools.Field(typeof(Coin), "vision").GetValue(coin) as Vision;
                         VisionQuery enemyQuery = AccessTools.Field(typeof(Coin), "enemyQuery").GetValue(coin) as VisionQuery;
                         coinVision.UpdateSourcePos(coin.transform.position);
