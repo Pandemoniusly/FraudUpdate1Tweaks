@@ -44,8 +44,8 @@ namespace FraudTweaks.Patches
                         Grenade componentInParent = transform.GetComponentInParent<Grenade>();
                         if ((bool)componentInParent & componentInParent.rocket)
                         {
-                            if (FraudTweaks.RocketDelay > 4f) 
-                            {
+                            if (FraudTweaks.RocketDelay > 4f) // uses a static field in FraudTweaks.cs because a static field in the patched class wouldnt update and save otherwise
+                            {                                 // 
                                 GameObject interrupt = AccessTools.Field(typeof(Grenade), "interruptSphere").GetValue(componentInParent) as GameObject;
                                 interrupt.SetActive(false);
                             }
@@ -65,7 +65,7 @@ namespace FraudTweaks.Patches
         [HarmonyPrefix]
         private static void DelayFallOff(ShotgunHammer __instance)
         {
-            FraudTweaks.RocketDelay = Mathf.Clamp(FraudTweaks.RocketDelay - Time.deltaTime, 0, 5);
+            FraudTweaks.RocketDelay = Mathf.Clamp(FraudTweaks.RocketDelay - Time.deltaTime, 0, 10);
         }
     }
 }

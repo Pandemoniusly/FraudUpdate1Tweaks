@@ -1,40 +1,40 @@
 ﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
-using ULTRAKILL.Enemy;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 namespace FraudTweaks.Patches
 {
     [HarmonyPatch(typeof(Coin))]
-    public class CoinFix // not implemented yet into mod, sends punched coins twice as high, unsure what to do about that
+    public class CoinFix
     {
-        private static void Bounce(Coin __instance) // bouncing on it silly style
+        static IEnumerator FixedUpdateWaiter(Coin __instance) // fix for inconsistent bounces,
         {
+            yield return new WaitForFixedUpdate();
             Rigidbody rigid = __instance.GetComponent<Rigidbody>();
             CustomGravity grav = __instance.GetComponent<CustomGravity>();
-            if (rigid != null & grav != null)
+            if (rigid != null)
             {
-                grav.useGravity = true;
-                grav.gravity = grav.gravity.normalized * 49;
-                rigid.velocity = Vector3.zero;
-                rigid.AddForce(Vector3.zero, ForceMode.VelocityChange);
-                rigid.AddForce(-grav.gravity.normalized * 25f, ForceMode.VelocityChange);
+                if (grav != null)
+                {
+                    rigid.isKinematic = false;
+                    rigid.useGravity = false;
+                    grav.useGravity = true;
+                    if (grav.gravity.magnitude == 40) grav.gravity = grav.gravity.normalized * 49.5f;
+                    // half of 9.81 the gravity earth irl uses multiplied by 10, makes it a bit closer to how fast a coin falls without custom gravity. 98 was too much
+                    rigid.velocity = Vector3.zero;
+                    rigid.AddForce(Vector3.zero, ForceMode.VelocityChange);
+                    rigid.AddForce(-grav.gravity.normalized * 25f, ForceMode.VelocityChange);
+                }
             }
         }
         [HarmonyPatch("Start")]
         [HarmonyPostfix]
-        private static void BounceFix(Coin __instance)
+        private static void BounceFix(Coin __instance) // bouncing on it silly style
         {
             Rigidbody rigid = __instance.GetComponent<Rigidbody>();
             if (rigid & rigid.useGravity & __instance.name.Contains("NewCoin+"))
             {
-                rigid.isKinematic = false;
-                rigid.useGravity = false;
-                Bounce(__instance);
+                CoroutineRunner.Instance.RunCoroutine(FixedUpdateWaiter(__instance));
             }
         }
     }

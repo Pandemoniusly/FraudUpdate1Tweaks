@@ -43,28 +43,32 @@ namespace FraudTweaks.Patches
                 {
                     if (hitInfo.transform.gameObject.TryGetComponent<Coin>(out var coin))
                     {
-                        Vision vision = AccessTools.Field(typeof(Coin), "vision").GetValue(coin) as Vision;
+                        Vision vision = AccessTools.Field(typeof(Coin), "vision").GetValue(coin) as Vision; // AccessTools used to get private values in other classes without more patches
                         VisionQuery enemyQuery = AccessTools.Field(typeof(Coin), "enemyQuery").GetValue(coin) as VisionQuery;
+                        VisionQuery explosiveQuery = AccessTools.Field(typeof(Coin), "explosiveQuery").GetValue(coin) as VisionQuery;
+                        VisionQuery glassQuery = AccessTools.Field(typeof(Coin), "glassQuery").GetValue(coin) as VisionQuery;
                         VisionQuery coinQuery = AccessTools.Field(typeof(Coin), "coinQuery").GetValue(coin) as VisionQuery;
-                        vision.UpdateSourcePos(coin.transform.position);
+                        vision.UpdateSourcePos(coin.transform.position); // marks the current coin out of the returnable values, any coins not in CoinTracker.revolverCoinsList are also excempt, untracked when reflected, this patch is firing before the reflect
+                        TargetDataRef uselessData;
                         TargetDataRef Data;
-                        TargetDataRef Data2;
-                        bool CanSeeEnemy = vision.TrySee(enemyQuery, out Data);
-                        bool CanSeeCoin = vision.TrySee(coinQuery, out Data2);
+                        bool CanSeeEnemy = vision.TrySee(enemyQuery, out uselessData);
+                        bool CanSeeExplosive = vision.TrySee(explosiveQuery, out uselessData);
+                        bool CanSeeGlass = vision.TrySee(glassQuery, out uselessData);
+                        bool CanSeeCoin = vision.TrySee(coinQuery, out Data);
                         if (CanSeeCoin)
                         {
-                            if (Data2.target.GameObject.TryGetComponent<Coin>(out var coin2))
+                            if (Data.target.GameObject.TryGetComponent<Coin>(out var coin2))
                             {
                                 if (coin2.ccc != null)
                                 {
-                                    if (coin2.ccc.beenHit.Contains(coin2.gameObject))
+                                    if (coin2.ccc.beenHit.Contains(coin2.gameObject)) // if closest coin has been hit then assume we finished the chain
                                     {
                                         ___splitcoinable = true;
                                     }
                                 }
                             }
                         }
-                        if (CanSeeEnemy & !CanSeeCoin)
+                        if (!CanSeeCoin & (CanSeeEnemy || CanSeeExplosive || CanSeeGlass))
                         {
                             ___splitcoinable = true;
                         }

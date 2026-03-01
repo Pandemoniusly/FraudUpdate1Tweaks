@@ -1,5 +1,6 @@
 using BepInEx;
 using BepInEx.Logging;
+using FraudTweaks.Patches;
 using HarmonyLib;
 using System.Collections.Generic;
 using ULTRAKILL.Enemy;
@@ -14,7 +15,6 @@ namespace FraudTweaks
         internal new static ManualLogSource Logger { get; private set; } = null!;
         internal static Harmony? Harmony { get; set; }
         public static float RocketDelay = 0f;
-        public static Dictionary<RevolverBeam, Vision> HitPointVisions = new Dictionary<RevolverBeam, Vision>();
         private void Awake()
         {
             Logger = base.Logger;
