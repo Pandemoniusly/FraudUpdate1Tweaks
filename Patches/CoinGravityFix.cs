@@ -19,8 +19,6 @@ namespace FraudTweaks.Patches
                     rigid.isKinematic = false;
                     rigid.useGravity = false;
                     grav.useGravity = true;
-                    if (grav.gravity.magnitude == 40) grav.gravity = grav.gravity.normalized * 49.5f;
-                    // half of 9.81 the gravity earth irl uses multiplied by 10, makes it a bit closer to how fast a coin falls without custom gravity. 98 was too much
                     rigid.velocity = Vector3.zero;
                     rigid.AddForce(Vector3.zero, ForceMode.VelocityChange);
                     rigid.AddForce(-grav.gravity.normalized * 25f, ForceMode.VelocityChange);
