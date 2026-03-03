@@ -15,6 +15,8 @@ namespace FraudTweaks
         internal new static ManualLogSource Logger { get; private set; } = null!;
         internal static Harmony? Harmony { get; set; }
         public static float RocketDelay = 0f;
+        public static bool CancelWhiplash = false;
+        public static EnemyIdentifier CaughtIdentifier;
         private void Awake()
         {
             Logger = base.Logger;
