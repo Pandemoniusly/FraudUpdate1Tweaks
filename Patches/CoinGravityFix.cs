@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FraudTweaks.Patches
 {
-    [HarmonyPatch(typeof(Coin))]
+/*    [HarmonyPatch(typeof(Coin))] // Patched in
     public class CoinFix
     {
         static IEnumerator FixedUpdateWaiter(Coin __instance) // fix for inconsistent bounces,
@@ -35,5 +35,5 @@ namespace FraudTweaks.Patches
                 CoroutineRunner.Instance.RunCoroutine(FixedUpdateWaiter(__instance));
             }
         }
-    }
+    } */
 }

@@ -17,6 +17,9 @@ namespace FraudTweaks
         public static float RocketDelay = 0f;
         public static bool CancelWhiplash = false;
         public static EnemyIdentifier CaughtIdentifier;
+        public static HookPoint SavedHook;
+        public static Dictionary<Shotgun,float> sawTimer = new Dictionary<Shotgun,float>();
+        public static Dictionary<ItemIdentifier,Transform> LastParent = new Dictionary<ItemIdentifier,Transform>();
         private void Awake()
         {
             Logger = base.Logger;

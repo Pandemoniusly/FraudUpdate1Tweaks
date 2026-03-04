@@ -1,15 +1,11 @@
 ﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
 using ULTRAKILL.Portal;
-using ULTRAKILL.Portal.Geometry;
 using UnityEngine;
-using UnityEngine.UIElements;
-using static UnityEngine.UIElements.StylePropertyAnimationSystem;
+using Unity.Collections;
+using System.Collections.Generic;
+using ULTRAKILL.Portal.Native;
 
-namespace FraudTweaks.Patches // not implemented, see comment below
+namespace FraudTweaks.Patches
 {
     [HarmonyPatch(typeof(Enemy))]
     public class EnemyPassPortal
@@ -30,18 +26,43 @@ namespace FraudTweaks.Patches // not implemented, see comment below
     [HarmonyPatch(typeof(HookArm))]
     public class Hookee
     {
+        public static int frame = 0;
+        public static bool wasInPortal = false;
         [HarmonyPatch("FixedUpdate")]
         [HarmonyPostfix]
-        private static void PortalPass(HookArm __instance,ref EnemyIdentifier ___caughtEid, ref Vector3 ___hookPoint,ref Transform ___caughtTransform)
+        private static void PortalPass(HookArm __instance,ref EnemyIdentifier ___caughtEid,ref HookPoint ___caughtHook, ref Collider ___caughtCollider, ref bool ___lightTarget,ref Vector3 ___hookPoint, ref CapsuleCollider ___playerCollider)
         {
-            // if i had a Physics.OverlapSphere for portals that also told me if it is intersecting the portal this would be alot easier for hookpoints
-            // i dont think im competent enough for it yet
+            // failing tremendosly at this trying to fix it, not fully implemented, a is
+            if (___caughtHook != null)
+            {
+                Vector3 vector5 = ___playerCollider.ClosestPoint(___hookPoint);
+                Vector3 relative = ___hookPoint + (___caughtCollider.ClosestPoint(vector5) - );
+                if (Vector3.Distance(vector5, relative) < 0.25f || (!___lightTarget && Vector3.Distance(vector5 + MonoSingleton<NewMovement>.Instance.rb.velocity * Time.fixedDeltaTime, relative) < 0.25f))
+                {
+                    FraudTweaks.CancelWhiplash = true;
+                }
+            }
+            if (!___lightTarget)
+            {
                 FraudTweaks.CaughtIdentifier = ___caughtEid;
+            }
+            // a
             if (FraudTweaks.CancelWhiplash)
             {
                 __instance.Cancel();
                 FraudTweaks.CancelWhiplash = true;
             }
+            // a
+        }
+
+        private static bool PrecisePortalCheck(PortalScene scene, PortalHandle portalHandle, Vector3 startPosition, Vector3 closestPoint)
+        {
+            Vector3 end = scene.GetTravelMatrix(portalHandle.Reverse()).MultiplyPoint3x4(closestPoint);
+            if (scene.FindPortalBetween(startPosition, end, out var hitPortal, out var _, out var _))
+            {
+                return hitPortal == portalHandle;
+            }
+            return false;
         }
     }
 }

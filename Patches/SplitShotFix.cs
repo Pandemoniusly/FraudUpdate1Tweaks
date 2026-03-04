@@ -16,7 +16,7 @@ using static UnityEngine.SendMouseEvents;
 
 namespace FraudTweaks.Patches
 {
-    [HarmonyPatch(typeof(RevolverBeam))]
+/*    [HarmonyPatch(typeof(RevolverBeam))] //Patched in
     public class Revolver
     {
         [HarmonyPatch("PiercingShotOrder")]
@@ -76,5 +76,5 @@ namespace FraudTweaks.Patches
                 }
             }
         }
-    }
+    }*/
 }
