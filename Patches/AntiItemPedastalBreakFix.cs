@@ -33,6 +33,7 @@ namespace FraudTweaks.Patches
         private static void RemoveItem2(ItemPlaceZone __instance)
         {
             ItemIdentifier Item = FraudTweaks.LastItem[__instance];
+            if (Item == null) return;
             Item.GetComponent<Rigidbody>().isKinematic = false;
             AddForce force = Item.GetComponent<AddForce>();
                 force.enabled = true;
