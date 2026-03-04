@@ -7,7 +7,7 @@ using ULTRAKILL.Portal.Native;
 
 namespace FraudTweaks.Patches
 {
-    [HarmonyPatch(typeof(Enemy))]
+/*    [HarmonyPatch(typeof(Enemy))]
     public class EnemyPassPortal
     {
         [HarmonyPatch("OnTravel")]
@@ -36,7 +36,7 @@ namespace FraudTweaks.Patches
             if (___caughtHook != null)
             {
                 Vector3 vector5 = ___playerCollider.ClosestPoint(___hookPoint);
-                Vector3 relative = ___hookPoint + (___caughtCollider.ClosestPoint(vector5) - );
+                Vector3 relative = ___hookPoint + (___caughtCollider.ClosestPoint(vector5));
                 if (Vector3.Distance(vector5, relative) < 0.25f || (!___lightTarget && Vector3.Distance(vector5 + MonoSingleton<NewMovement>.Instance.rb.velocity * Time.fixedDeltaTime, relative) < 0.25f))
                 {
                     FraudTweaks.CancelWhiplash = true;
@@ -64,5 +64,5 @@ namespace FraudTweaks.Patches
             }
             return false;
         }
-    }
+    }*/
 }

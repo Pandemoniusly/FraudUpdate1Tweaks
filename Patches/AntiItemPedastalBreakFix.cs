@@ -9,7 +9,6 @@ namespace FraudTweaks.Patches
     [HarmonyPatch(typeof(ItemPlaceZone))] // ref https://www.youtube.com/watch?v=ETMomo8rhCM
     public class PedestalFix
     {
-        public static ItemIdentifier Item = null;
         [HarmonyPatch("CheckItem")]
         [HarmonyPrefix]
         private static void RemoveItem(ItemPlaceZone __instance, ref AudioSource ___soundOnDeactivated)
@@ -25,7 +24,7 @@ namespace FraudTweaks.Patches
                 force.onEnable = true;
                 force.enabled = false;
                 comp.transform.SetParent(null, true);
-                Item = comp;
+                FraudTweaks.LastItem.Add(__instance, comp);
             }
         }
 
@@ -33,11 +32,12 @@ namespace FraudTweaks.Patches
         [HarmonyPostfix]
         private static void RemoveItem2(ItemPlaceZone __instance)
         {
-            FraudTweaks.Logger.LogInfo(Item.name);
+            ItemIdentifier Item = FraudTweaks.LastItem[__instance];
             Item.GetComponent<Rigidbody>().isKinematic = false;
             AddForce force = Item.GetComponent<AddForce>();
                 force.enabled = true;
             Item.GetComponent<Rigidbody>().angularVelocity = force.force;
+            FraudTweaks.LastItem.Remove(__instance);
         }
     }
 }

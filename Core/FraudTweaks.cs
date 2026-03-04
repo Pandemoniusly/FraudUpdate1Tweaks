@@ -19,7 +19,7 @@ namespace FraudTweaks
         public static EnemyIdentifier CaughtIdentifier;
         public static HookPoint SavedHook;
         public static Dictionary<Shotgun,float> sawTimer = new Dictionary<Shotgun,float>();
-        public static Dictionary<ItemIdentifier,Transform> LastParent = new Dictionary<ItemIdentifier,Transform>();
+        public static Dictionary<ItemPlaceZone,ItemIdentifier> LastItem = new Dictionary<ItemPlaceZone,ItemIdentifier>();
         private void Awake()
         {
             Logger = base.Logger;
