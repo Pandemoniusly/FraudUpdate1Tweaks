@@ -1,7 +1,5 @@
 ﻿using HarmonyLib;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace FraudTweaks.Patches
@@ -24,21 +22,34 @@ namespace FraudTweaks.Patches
                 force.onEnable = true;
                 force.enabled = false;
                 comp.transform.SetParent(null, true);
-                FraudTweaks.LastItem.Add(__instance, comp);
-            }
-        }
-
-        [HarmonyPatch("CheckItem")]
-        [HarmonyPostfix]
-        private static void RemoveItem2(ItemPlaceZone __instance)
-        {
-            ItemIdentifier Item = FraudTweaks.LastItem[__instance];
-            if (Item == null) return;
-            Item.GetComponent<Rigidbody>().isKinematic = false;
-            AddForce force = Item.GetComponent<AddForce>();
+                comp.GetComponent<Rigidbody>().isKinematic = false;
                 force.enabled = true;
-            Item.GetComponent<Rigidbody>().angularVelocity = force.force;
-            FraudTweaks.LastItem.Remove(__instance);
+                comp.GetComponent<Rigidbody>().angularVelocity = force.force;
+                UnityEngine.Object.Instantiate(MonoSingleton<HookArm>.Instance.errorSound);
+                MonoSingleton<CameraController>.Instance.CameraShake(0.5f);
+                int rand = new System.Random().Next(1, 6);
+                switch (rand)
+                    {
+                    case 1:
+                        MonoSingleton<HudMessageReceiver>.Instance.SendHudMessage("<color=red>That doesnt belong there!</color>", "", "", 0, silent: true);
+                        break;
+                    case 2:
+                        MonoSingleton<HudMessageReceiver>.Instance.SendHudMessage("<color=red>Stop that!</color>", "", "", 0, silent: true);
+                        break;
+                    case 3:
+                        MonoSingleton<HudMessageReceiver>.Instance.SendHudMessage("<color=red>This is for your safety!</color>", "", "", 0, silent: true);
+                        break;
+                    case 4:
+                        MonoSingleton<HudMessageReceiver>.Instance.SendHudMessage("<color=red>You'll get softlocked!</color>", "", "", 0, silent: true);
+                        break;
+                    case 5:
+                        MonoSingleton<HudMessageReceiver>.Instance.SendHudMessage("<color=red>Quit doing that!</color>", "", "", 0, silent: true);
+                        break;
+                    case 6:
+                        MonoSingleton<HudMessageReceiver>.Instance.SendHudMessage("<color=red>That doesnt fit there!</color>", "", "", 0, silent: true);
+                        break;
+                }
+            }
         }
     }
 }
