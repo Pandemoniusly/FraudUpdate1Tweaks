@@ -5,6 +5,7 @@ using HarmonyLib;
 using System.Collections.Generic;
 using ULTRAKILL.Enemy;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace FraudTweaks
 {
@@ -27,7 +28,15 @@ namespace FraudTweaks
             Patch();
 
             Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded!");
-        }
+            SceneManager.sceneLoaded += (Scene scene, LoadSceneMode lsm) =>
+            {
+                OutofboundsList.Clear();
+                OutofboundsParents.Clear();
+                OutofboundsActive.Clear();
+                OutofboundsList.Capacity = 0;
+                OutofboundsParents.Capacity = 0;
+            };
+            }
 
         internal static void Patch()
         {
