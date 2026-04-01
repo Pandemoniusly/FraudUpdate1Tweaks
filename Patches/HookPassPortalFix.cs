@@ -1,13 +1,32 @@
 ﻿using HarmonyLib;
-using ULTRAKILL.Portal;
-using UnityEngine;
-using Unity.Collections;
 using System.Collections.Generic;
+using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Native;
+using Unity.Collections;
+using UnityEngine;
+using UnityEngine.XR;
 
 namespace FraudTweaks.Patches
 {
-/*    [HarmonyPatch(typeof(Enemy))]
+    /*[HarmonyPatch(typeof(HookArm))]
+    public class Hookee
+    {
+        [HarmonyPatch("GetNextCaughtPoint")]
+        [HarmonyPrefix]
+        private static void ProperCastPost(HookArm __instance, ref List<PortalTraversalV2> ___portalTraversals, ref Vector3 __result)
+        {
+            List<PortalTraversalV2> list = ___portalTraversals;
+            if (list != null && list.Count >= 2)
+            {
+                if (Vector3.Distance(__instance.hand.position, ___portalTraversals[1].entrancePoint) < 0.1f)
+                {
+                    __result = ___portalTraversals[1].entrancePoint;
+                }
+            }
+        }
+    }
+    */
+    /*[HarmonyPatch(typeof(Enemy))]
     public class EnemyPassPortal
     {
         [HarmonyPatch("OnTravel")]

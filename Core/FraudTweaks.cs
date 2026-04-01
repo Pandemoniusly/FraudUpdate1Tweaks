@@ -14,12 +14,11 @@ namespace FraudTweaks
         public static FraudTweaks Instance { get; private set; } = null!;
         internal new static ManualLogSource Logger { get; private set; } = null!;
         internal static Harmony? Harmony { get; set; }
-        public static float RocketDelay = 0f;
-        public static bool CancelWhiplash = false;
-        public static EnemyIdentifier CaughtIdentifier;
-        public static HookPoint SavedHook;
-        public static Dictionary<Shotgun,float> sawTimer = new Dictionary<Shotgun,float>();
         public static Dictionary<ItemPlaceZone,ItemIdentifier> LastItem = new Dictionary<ItemPlaceZone,ItemIdentifier>();
+        public static int SavedLevel = 0;
+        public static List<Bounds> OutofboundsList = new List<Bounds>();
+        public static List<Transform> OutofboundsParents = new List<Transform>();
+        public static Dictionary<GameObject,bool> OutofboundsActive = new Dictionary<GameObject, bool>();
         private void Awake()
         {
             Logger = base.Logger;
