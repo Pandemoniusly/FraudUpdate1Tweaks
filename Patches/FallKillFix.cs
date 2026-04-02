@@ -39,7 +39,7 @@ namespace FraudTweaks.Patches
             if (__instance.deathType == "PANCAKED")
             {
                 IgnoreDeathZones component2;
-                if ((other.gameObject.CompareTag("Enemy") || other.gameObject.layer == 10 || other.gameObject.layer == 11 || other.gameObject.layer == 12) && ___enemyAffected && !other.TryGetComponent<IgnoreDeathZones>(out component2))
+                if ((other.gameObject.CompareTag("Armor") || other.gameObject.layer == LayerMask.NameToLayer("EnemyTrigger")) && ___enemyAffected && !other.TryGetComponent<IgnoreDeathZones>(out component2))
                 {
                     EnemyIdentifier enemyIdentifier = other.gameObject.GetComponentInParent<EnemyIdentifier>();
                     if (enemyIdentifier == null && other.gameObject.TryGetComponent<IdolMauricer>(out var _))
