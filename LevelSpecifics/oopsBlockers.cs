@@ -16,26 +16,28 @@ namespace FraudTweaks.LevelSpecifics
         {
             GameObject[] All = Resources.FindObjectsOfTypeAll<GameObject>();
             List<GameObject> oobs = All.Where(obj => obj.name.Contains("OopsBlocker")).ToList();
-            foreach (GameObject obj in oobs)
+            if (oobs.Count != 0)
             {
-                FraudTweaks.OutofboundsActive.Add(obj,obj.activeSelf);
-                ActiveCheck active = obj.AddComponent<ActiveCheck>();
-                active.instance = active;
-                Bounds bounds = new Bounds();
-                foreach (BoxCollider obj2 in obj.GetComponentsInChildren<BoxCollider>())
+                foreach (GameObject obj in oobs)
                 {
-                    bounds.Encapsulate(obj2.bounds);
+                    FraudTweaks.OutofboundsActive.Add(obj, obj.activeSelf);
+                    ActiveCheck active = obj.AddComponent<ActiveCheck>();
+                    Bounds bounds = new Bounds();
+                    foreach (BoxCollider obj2 in obj.GetComponentsInChildren<BoxCollider>())
+                    {
+                        bounds.Encapsulate(obj2.bounds);
+                    }
+                    bounds.Expand(-0.05f);
+                    FraudTweaks.OutofboundsList.Add(bounds);
+                    FraudTweaks.OutofboundsParents.Add(obj.transform);
                 }
-                bounds.Expand(-0.05f);
-                FraudTweaks.OutofboundsList.Add(bounds);
-                FraudTweaks.OutofboundsParents.Add(obj.transform);
             }
-            
         }
         [HarmonyPatch("Update")]
         [HarmonyPrefix]
         public static void BoundsRunner(StatsManager __instance)
         {
+            if (FraudTweaks.OutofboundsList.Count == 0) return;
             for (int i = 0; i < FraudTweaks.OutofboundsList.Count; i++)
             {
                 Bounds playerBounds = MonoSingleton<NewMovement>.Instance.playerCollider.bounds;
@@ -75,11 +77,13 @@ namespace FraudTweaks.LevelSpecifics
         public ActiveCheck instance;
         public void OnEnable()
         {
+            instance = this;
             if (!FraudTweaks.OutofboundsActive.ContainsKey(instance.gameObject)) return;
             FraudTweaks.OutofboundsActive[instance.gameObject] = true;
         }
         public void OnDisable()
         {
+            instance = this;
             if (!FraudTweaks.OutofboundsActive.ContainsKey(instance.gameObject)) return;
             FraudTweaks.OutofboundsActive[instance.gameObject] = false;
         }
